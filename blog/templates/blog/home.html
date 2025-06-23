@@ -1,0 +1,79 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Home - My Blog{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">Welcome to My Blog</h1>
+
+  {% if filter_type and filter_name %}
+  <h5 class="mb-3">
+    Showing posts by {{ filter_type }}: <span class="badge bg-info">{{ filter_name }}</span>
+    <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary ms-2">Clear Filter</a>
+  </h5>
+  {% endif %}
+
+  {% if user.is_authenticated %}
+      <div class="mb-3">
+          <span class="me-2">Hi <strong>{{ user.username }}</strong></span>
+          <form method="post" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger">Logout</button>
+          </form>
+          <a href="{% url 'my_posts' %}" class="btn btn-sm btn-outline-dark ms-2">📄 My Posts</a>
+          <a href="{% url 'create_post' %}" class="btn btn-sm btn-success ms-2">➕ Create New Post</a>
+      </div>
+  {% else %}
+      <div class="mb-3">
+          <a href="{% url 'login' %}" class="btn btn-sm btn-primary">Login</a>
+          <a href="{% url 'register' %}" class="btn btn-sm btn-secondary ms-2">Register</a>
+      </div>
+  {% endif %}
+
+  <form method="get" class="mb-4">
+  <div class="input-group">
+    <input type="text" name="q" class="form-control" placeholder="Search blog posts..." value="{{ request.GET.q }}">
+    <button type="submit" class="btn btn-outline-primary">Search</button>
+  </div>
+</form>
+
+  {% for post in posts %}
+      <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+              <h4 class="card-title">
+                  <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
+              </h4>
+              <p class="text-muted mb-1">
+                  <strong>Author:</strong> {{ post.author.username }} |
+                  <strong>Date:</strong> {{ post.created_at|date:"Y-m-d H:i" }}
+              </p>
+              
+              {% if post.image %}
+              <img src="{{ post.image.url }}" class="img-fluid rounded mb-3" style="max-height: 300px;" alt="Post image">
+              {% endif %}
+
+              <p class="card-text">{{ post.content|slice:":200" }}...</p>
+          </div>
+      </div>
+  {% empty %}
+      <p>No blog posts yet!</p>
+  {% endfor %}
+  <nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
+      </li>
+    {% endif %}
+
+    <li class="page-item disabled">
+      <a class="page-link" href="#">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
+    </li>
+
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}

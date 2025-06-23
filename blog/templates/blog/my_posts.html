@@ -1,0 +1,25 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}My Posts{% endblock %}
+
+{% block content %}
+  <h2>My Blog Posts</h2>
+
+  {% if posts %}
+    {% for post in posts %}
+      <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+          <h4 class="card-title">
+            <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
+          </h4>
+          <p class="text-muted mb-1">
+            <strong>Date:</strong> {{ post.created_at|date:"Y-m-d H:i" }}
+          </p>
+          <p class="card-text">{{ post.content|slice:":200" }}...</p>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>You haven't written any blog posts yet.</p>
+  {% endif %}
+{% endblock %}

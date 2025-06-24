@@ -8,4 +8,3 @@ Live project hosted on **Render**.
 🔗 [View the Project on Render](https://my-django-blog-8tdv.onrender.com)
 
 ---
-images won't visible

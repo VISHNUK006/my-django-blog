@@ -103,7 +103,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-DEBUG = True
 
 
 # Email settings (use Gmail SMTP and read from .env)
@@ -120,3 +119,4 @@ LOGIN_REDIRECT_URL = '/'
 
 # Default auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
